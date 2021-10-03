@@ -1,0 +1,38 @@
+version: '3'
+services:
+    web: 
+        image: nginx:latest
+        restart: always
+        volumes:
+            - ./public:/var/www/html
+            - ./conf.d:/etc/nginx/conf.d
+            - ./certbot/conf:/etc/nginx/ssl
+            - ./certbot/data:/var/www/certbot
+        ports:
+            - 80:80
+            - 443:443
+    certbot:
+        image: certbot/certbot:latest
+        command: certonly --webroot --webroot-path=/var/www/certbot --email michal@kronmar.eu --agree-tos --no-eff-email -d carvisor.pl -d www.carvisor.pl --keep
+        volumes:
+            - ./certbot/conf:/etc/letsencrypt
+            - ./certbot/logs:/var/log/letsencrypt
+            - ./certbot/data:/var/www/certbot
+    api:
+        container_name: 'api'
+        build: ./tomcat
+        ports:
+            - "8080:8080"
+        environment:
+            WAIT_HOSTS: database:3306
+    databases:
+        container_name: 'databases'
+        image: mariadb
+        restart: always
+        environment:
+          MARIADB_PASSWORD: EkEyW28W1jXquuC
+          MARIADB_ROOT_PASSWORD: dsnj3erhegw
+          MARIADB_DATABASE: carvisor
+          MARIADB_USER: carvisoru
+        ports:
+            - "3306:3306"
