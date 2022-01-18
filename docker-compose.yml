@@ -41,4 +41,18 @@ services:
           - "--collation-server=utf8mb4_unicode_ci"
         ports:
             - "3306:3306"
+    databases2:
+        container_name: 'databases2'
+        image: mariadb:10.3
+        restart: always
+        environment:
+          MARIADB_PASSWORD: EkEyW28W1jXquuC
+          MARIADB_ROOT_PASSWORD: dsnj3erhegw
+          MARIADB_DATABASE: carvisor2
+          MARIADB_USER: carvisoru
+        command:
+          - "--character-set-server=utf8mb4"
+          - "--collation-server=utf8mb4_unicode_ci"
+        ports:
+            - "3406:3306"
 
